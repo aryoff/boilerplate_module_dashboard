@@ -14,7 +14,7 @@ window.generateDashboard = function() {
                 createNewElement(document.getElementById('Dashboard'),{kind:'h1',innerhtml:'Dashboard'});
                 let row = createNewElement(document.getElementById('Dashboard'),{kind:'div',class:'row'});
                 Object.entries(data).forEach(([key_result, value_result]) => {
-                    let col = createNewElement(row,{kind:'div',class:'col-lg-2 col-md-3 col-sm-6 col-12'});
+                    let col = createNewElement(row,{kind:'div',class:'col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12'});
                     let infoBox = createNewElement(col,{kind:'div',class:'info-box shadow'});
                     createNewElement(infoBox,{kind:'span',class:'info-box-icon '+value_result.background,innerhtml:'<i class="'+value_result.icon+'"></i>'});
                     let infoBoxContent = createNewElement(infoBox,{kind:'div',class:'info-box-content'});
@@ -23,7 +23,7 @@ window.generateDashboard = function() {
                     element.push(key_result);
                 });
                 populateDashboard();
-                setInterval(populateDashboard, 10000);
+                setInterval(populateDashboard, 60000);
             }
         },
         error: function (data) {
@@ -39,7 +39,9 @@ function populateDashboard() {
         dataType: 'json',
         success: function (data) {
             element.forEach(Element => {
-                document.getElementById('dashboard_'+Element).innerHTML = data[Element];
+                if (data[Element]!=undefined) {
+                    document.getElementById('dashboard_'+Element).innerHTML = data[Element];
+                }
             });
         },
         error: function (data) {
