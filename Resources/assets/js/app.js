@@ -5,16 +5,16 @@ $.ajaxSetup({
 });
 var element = Array();
 window.generateDashboard = function() {
-    createNewElement(document.getElementById('Dashboard'),{kind:'h1',innerhtml:'Dashboard'});
     $.ajax({
         url: base_path+'dashboard/template',
         type: "GET",
         dataType: 'json',
         success: function (data) {
             if (data) {
+                createNewElement(document.getElementById('Dashboard'),{kind:'h1',innerhtml:'Dashboard'});
                 let row = createNewElement(document.getElementById('Dashboard'),{kind:'div',class:'row'});
                 Object.entries(data).forEach(([key_result, value_result]) => {
-                    let col = createNewElement(row,{kind:'div',class:'col-md-3 col-sm-6 col-12'});
+                    let col = createNewElement(row,{kind:'div',class:'col-lg-2 col-md-3 col-sm-6 col-12'});
                     let infoBox = createNewElement(col,{kind:'div',class:'info-box shadow'});
                     createNewElement(infoBox,{kind:'span',class:'info-box-icon '+value_result.background,innerhtml:'<i class="'+value_result.icon+'"></i>'});
                     let infoBoxContent = createNewElement(infoBox,{kind:'div',class:'info-box-content'});
@@ -22,6 +22,7 @@ window.generateDashboard = function() {
                     createNewElement(infoBoxContent,{kind:'span',class:'info-box-number',id:'dashboard_'+key_result});
                     element.push(key_result);
                 });
+                populateDashboard();
                 setInterval(populateDashboard, 10000);
             }
         },
