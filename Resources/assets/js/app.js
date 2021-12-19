@@ -11,7 +11,7 @@ window.generateDashboard = function() {
         dataType: 'json',
         success: function (data) {
             if (data) {
-                createNewElement(document.getElementById('Dashboard'),{kind:'h1',innerhtml:'Dashboard'});
+                // createNewElement(document.getElementById('Dashboard'),{kind:'h1',innerhtml:'Dashboard'});
                 let row = createNewElement(document.getElementById('Dashboard'),{kind:'div',class:'row'});
                 Object.entries(data).forEach(([key_result, value_result]) => {
                     let col = createNewElement(row,{kind:'div',class:'col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12'});
