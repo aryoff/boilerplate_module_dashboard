@@ -28,15 +28,15 @@ class DashboardController extends Controller
                     $container[$temp_key] += $temp_value;
                 }
             }
-            if ($key == 0) {
-                $campaign_result = DB::connection('mirror')->select("SELECT parameter, date_part('epoch', NOW()) AS now,id,name FROM dynamicticket_escalation_campaigns WHERE id=?", [$value->dynamicticket_escalation_campaign_id])[0];
-                $campaign = json_decode($campaign_result->parameter);
-                if (property_exists($campaign, 'filter')) {
-                    $filter = $campaign->filter;
-                }
-                $sisa = DB::connection('mirror')->select("WITH data_sisa AS (SELECT*FROM(SELECT :escalation_campaign_id::VARCHAR as campaign_id) params CROSS JOIN ($filter) A) SELECT COUNT(*) AS sisa FROM data_sisa WHERE dynamicticket_categorie_id=:category_id AND ((status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',3)) AND jsonb_extract_path_text(status,campaign_id,'attempt')::INTEGER< :max_rna AND jsonb_extract_path_text(status,campaign_id,'datetime')::TIMESTAMP< CURRENT_TIMESTAMP) OR ((status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',1)) OR status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',2))) AND jsonb_extract_path_text(status,campaign_id,'datetime')::TIMESTAMP< CURRENT_TIMESTAMP-INTERVAL '$campaign->stagnation') OR (NOT jsonb_exists (data_sisa.status,campaign_id) OR CASE WHEN jsonb_extract_path_text(status,campaign_id,'datetime')::DATE=CURRENT_DATE THEN FALSE ELSE TRUE END));", ['escalation_campaign_id' => $value->dynamicticket_escalation_campaign_id, 'max_rna' => $campaign->max_rna, 'category_id' => $campaign->category_id]);
-                $container['sisa'] = $sisa[0]->sisa;
-            }
+            // if ($key == 0) {
+            //     $campaign_result = DB::connection('mirror')->select("SELECT parameter, date_part('epoch', NOW()) AS now,id,name FROM dynamicticket_escalation_campaigns WHERE id=?", [$value->dynamicticket_escalation_campaign_id])[0];
+            //     $campaign = json_decode($campaign_result->parameter);
+            //     if (property_exists($campaign, 'filter')) {
+            //         $filter = $campaign->filter;
+            //     }
+            //     $sisa = DB::connection('mirror')->select("WITH data_sisa AS (SELECT*FROM(SELECT :escalation_campaign_id::VARCHAR as campaign_id) params CROSS JOIN ($filter) A) SELECT COUNT(*) AS sisa FROM data_sisa WHERE dynamicticket_categorie_id=:category_id AND ((status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',3)) AND jsonb_extract_path_text(status,campaign_id,'attempt')::INTEGER< :max_rna AND jsonb_extract_path_text(status,campaign_id,'datetime')::TIMESTAMP< CURRENT_TIMESTAMP) OR ((status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',1)) OR status @> jsonb_build_object (campaign_id,jsonb_build_object ('status',2))) AND jsonb_extract_path_text(status,campaign_id,'datetime')::TIMESTAMP< CURRENT_TIMESTAMP-INTERVAL '$campaign->stagnation') OR (NOT jsonb_exists (data_sisa.status,campaign_id) OR CASE WHEN jsonb_extract_path_text(status,campaign_id,'datetime')::DATE=CURRENT_DATE THEN FALSE ELSE TRUE END));", ['escalation_campaign_id' => $value->dynamicticket_escalation_campaign_id, 'max_rna' => $campaign->max_rna, 'category_id' => $campaign->category_id]);
+            //     $container['sisa'] = $sisa[0]->sisa;
+            // }
         }
         return response()->json($container, 200);
     }
@@ -46,10 +46,10 @@ class DashboardController extends Controller
         if (property_exists($user, 'user_nossa') && property_exists($user, 'dynamicticket') && property_exists($user->dynamicticket, 'escalation_campaign')) {
             $response = array();
             $temp = array();
-            $temp['background'] = 'bg-secondary';
-            $temp['icon'] = 'fas fa-database';
-            $temp['label'] = 'Tickets';
-            $response['sisa'] = $temp;
+            // $temp['background'] = 'bg-secondary';
+            // $temp['icon'] = 'fas fa-database';
+            // $temp['label'] = 'Tickets';
+            // $response['sisa'] = $temp;
             $temp['background'] = 'bg-info';
             $temp['icon'] = 'far fa-envelope';
             $temp['label'] = 'Submit';
