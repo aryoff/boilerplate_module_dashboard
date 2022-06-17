@@ -30,7 +30,7 @@ class DashboardController extends Controller
                 }
             }
             if ($key == 0) {
-                $sisa = DB::connection('mirror')->select("SELECT COALESCE(rekap->'sisa',0) AS sisa FROM dynamicticket_rekap_campaign_daily WHERE tanggal=CURRENT_DATE AND dynamicticket_escalation_campaign_id=:escalation_campaign_id;", ['escalation_campaign_id' => $value->dynamicticket_escalation_campaign_id]);
+                $sisa = DB::connection('mirror')->select("SELECT COALESCE(rekap->>'sisa',0) AS sisa FROM dynamicticket_rekap_campaign_daily WHERE tanggal=CURRENT_DATE AND dynamicticket_escalation_campaign_id=:escalation_campaign_id;", ['escalation_campaign_id' => $value->dynamicticket_escalation_campaign_id]);
                 $container['sisa'] = $sisa[0]->sisa;
             }
         }
