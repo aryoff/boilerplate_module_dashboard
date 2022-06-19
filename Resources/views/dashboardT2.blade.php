@@ -200,6 +200,14 @@
                             beginAtZero: true
                         }
                     }]
+                },
+                events: false,
+                animation: {
+                    duration: 500,
+                    easing: "easeOutQuart",
+                    onComplete: function () {
+                        barLabel(this);
+                    }
                 }
             }
         });
@@ -238,6 +246,14 @@
                             beginAtZero: true
                         }
                     }]
+                },
+                events: false,
+                animation: {
+                    duration: 500,
+                    easing: "easeOutQuart",
+                    onComplete: function () {
+                        barLabel(this);
+                    }
                 }
             }
         });
@@ -276,6 +292,14 @@
                             beginAtZero: true
                         }
                     }]
+                },
+                events: false,
+                animation: {
+                    duration: 500,
+                    easing: "easeOutQuart",
+                    onComplete: function () {
+                        barLabel(this);
+                    }
                 }
             }
         });
@@ -306,9 +330,61 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true
+                maintainAspectRatio: true,
+                events: false,
+                animation: {
+                    duration: 500,
+                    easing: "easeOutQuart",
+                    onComplete: function () {
+                        let ctx = this.chart.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset) {
+                            for (let i = 0; i < dataset.data.length; i++) {
+                                let model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                                    total = dataset._meta[Object.keys(dataset._meta)[0]].total,
+                                    mid_radius = model.innerRadius + (model.outerRadius - model.innerRadius) / 2,
+                                    start_angle = model.startAngle,
+                                    end_angle = model.endAngle,
+                                    mid_angle = start_angle + (end_angle - start_angle) / 2;
+
+                                let x = mid_radius * Math.cos(mid_angle);
+                                let y = mid_radius * Math.sin(mid_angle);
+
+                                ctx.fillStyle = dataset.borderColor[i];
+
+                                let val = dataset.data[i];
+                                let percent = String(Math.round(val / total * 100)) + "%";
+
+                                if (val != 0) {
+                                    ctx.fillText(dataset.data[i], model.x + x, model.y + y);
+                                    // Display percent in another line, line break doesn't work for fillText
+                                    ctx.fillText(percent, model.x + x, model.y + y + 15);
+                                }
+                            }
+                        });
+                    }
+                }
             }
         });
+        function barLabel(barChart) {
+            let ctx = barChart.chart.ctx;
+            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            barChart.data.datasets.forEach(function (dataset) {
+                for (let i = 0; i < dataset.data.length; i++) {
+                    let model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                        val = dataset.data[i];
+                    if (val != 0) {
+                        ctx.fillStyle = dataset.borderColor[i];
+                        ctx.fillText(dataset.data[i], model.x * 0.9, model.y);
+                    }
+                }
+            });
+        }
         function updateCharts() {
             waitlistPerCampaignChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
             waitlistPerCampaignChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
@@ -333,7 +409,7 @@
                 type: "POST",
                 dataType: 'json',
                 success: function (result) {
-                    if ($.fn.DataTable.isDataTable('#topAgentStatusTable') ) {
+                    if ($.fn.DataTable.isDataTable('#topAgentStatusTable')) {
                         topAgentStatusTable.destroy();
                         $('#topAgentStatusTable').empty();
                     }
