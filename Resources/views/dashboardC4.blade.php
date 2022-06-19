@@ -58,7 +58,7 @@
                     <h3 class="card-title">Nossa LUP</h3>
                 </div>
                 <div class="card-body">
-                    <h6 class="d-flex justify-content-center mx-auto"><span class="mx-0 px-0" id="nossaLastUpdateValue"></span></h6>
+                    <h6 class="d-flex justify-content-center mx-auto"><span id="nossaLastUpdateValue"></span></h6>
                 </div>
             </div>
         </div>
@@ -112,6 +112,7 @@
                         "searching": false,
                         "info": false,
                         "paging": false,
+                        "ordering": false,
                         "stateSave": true,
                         "data": data.data,
                         "columns": [{
