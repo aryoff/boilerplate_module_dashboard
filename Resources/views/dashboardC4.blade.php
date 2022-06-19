@@ -50,7 +50,7 @@
                     <h3 class="card-title">Nossa LUP</h3>
                 </div>
                 <div class="card-body">
-                    <h5 class="d-flex justify-content-center mx-auto"><span class="badge mx-0 px-0" id="nossaLastUpdateValue"></span></h5>
+                    <h5 class="d-flex justify-content-center mx-auto"><span class="mx-0 px-0" id="nossaLastUpdateValue"></span></h5>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
         generateTableRealtimeStaff();
         getTotalAgentOnline();
         getLastUpdateNossa();
-        getDataCampaign();
+        // getDataCampaign();
         function generateTableRealtimeStaff() {
             $.ajax({
                 url: "{{ url('/dashboard/getRealtimeStaffC4') }}",
@@ -290,20 +290,17 @@
                     if (data) {
                         document.getElementById('nossaLastUpdateValue').innerHTML = data.hari+'<br>'+data.jam;
                         if (data.delta_last_update > 10) {
-                            document.getElementById('nossaLastUpdateValue').classList.remove("btn-success");
-                            document.getElementById('nossaLastUpdateValue').classList.remove("btn-warning");
-                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-success");
-                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-success");
+                            document.getElementById('nossaLastUpdateCard').classList.add("bg-danger");
                         } else if (data.delta_last_update > 6) {
-                            document.getElementById('nossaLastUpdateValue').classList.add("btn-warning");
-                            document.getElementById('nossaLastUpdateValue').classList.remove("btn-success");
-                            document.getElementById('nossaLastUpdateCard').classList.add("btn-warning");
-                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-success");
+                            document.getElementById('nossaLastUpdateCard').classList.add("bg-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-success");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-danger");
                         } else {
-                            document.getElementById('nossaLastUpdateValue').classList.remove("btn-warning");
-                            document.getElementById('nossaLastUpdateValue').classList.add("btn-success");
-                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-warning");
-                            document.getElementById('nossaLastUpdateCard').classList.add("btn-success");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-danger");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.add("bg-success");
                         }
 
                     }
