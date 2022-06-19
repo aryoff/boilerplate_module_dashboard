@@ -88,7 +88,7 @@
         generateTableRealtimeStaff();
         getTotalAgentOnline();
         getLastUpdateNossa();
-        // getDataCampaign();
+        getDataCampaign();
         function generateTableRealtimeStaff() {
             $.ajax({
                 url: "{{ url('/dashboard/getRealtimeStaffC4') }}",
