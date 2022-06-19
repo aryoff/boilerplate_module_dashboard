@@ -22,21 +22,21 @@
                 </div>
                 <div class="card-body">
                     <ul class="nav flex-column">
-                        <li class="nav-item"> Total <span class="float-right badge bg-primary"><h6><span id="staffTotal">0</span></h6></span>
+                        <li class="nav-item"> Total <span class="float-right badge bg-primary"><h5><span id="staffTotal">0</span></h5></span>
                         </li>
-                        <li class="nav-item"> Online <span class="float-right badge bg-info"><h6><span id="staffOnline">0</span></h6></span>
+                        <li class="nav-item"> Online <span class="float-right badge bg-info"><h5><span id="staffOnline">0</span></h5></span>
                         </li>
-                        <li class="nav-item"> AUX <span class="float-right badge bg-success"><h6><span id="staffAux">0</span></h6></span>
+                        <li class="nav-item"> AUX <span class="float-right badge bg-success"><h5><span id="staffAux">0</span></h5></span><br><br>
                             <ul class="nav flex-column" style="padding-left: 10px;">
-                                <li class="nav-item"> Toilet <span class="float-right badge bg-primary"><h6><span id="staffAuxToilet">0</span></h6></span>
+                                <li class="nav-item"> Toilet <span class="float-right badge bg-primary"><h5><span id="staffAuxToilet">0</span></h5></span>
                                 </li>
-                                <li class="nav-item"> Brief <span class="float-right badge bg-info"><h6><span id="staffAuxBrief">0</span></h6></span>
+                                <li class="nav-item"> Brief <span class="float-right badge bg-info"><h5><span id="staffAuxBrief">0</span></h5></span>
                                 </li>
-                                <li class="nav-item"> Break <span class="float-right badge bg-success"><h6><span id="staffAuxBreak">0</span></h6></span>
+                                <li class="nav-item"> Break <span class="float-right badge bg-success"><h5><span id="staffAuxBreak">0</span></h5></span>
                                 </li>
-                                <li class="nav-item"> Sholat <span class="float-right badge bg-info"><h6><span id="staffAuxSholat">0</span></h6></span>
+                                <li class="nav-item"> Sholat <span class="float-right badge bg-info"><h5><span id="staffAuxSholat">0</span></h5></span>
                                 </li>
-                                <li class="nav-item"> Others <span class="float-right badge bg-success"><h6><span id="staffAuxOther">0</span></h6></span>
+                                <li class="nav-item"> Others <span class="float-right badge bg-success"><h5><span id="staffAuxOther">0</span></h5></span>
                                 </li>
                             </ul>
                         </li>
@@ -290,19 +290,20 @@
                     if (data) {
                         document.getElementById('nossaLastUpdateValue').innerHTML = data.hari+'<br>'+data.jam;
                         if (data.delta_last_update > 10) {
-                            document.getElementById('nossaLastUpdateCard').classList.add("bg-danger");
-                        } else {
-                            document.getElementById('nossaLastUpdateCard').classList.remove("bg-danger");
-                        }
-                        if (data.delta_last_update > 10) {
                             document.getElementById('nossaLastUpdateValue').classList.remove("btn-success");
                             document.getElementById('nossaLastUpdateValue').classList.remove("btn-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-success");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-warning");
                         } else if (data.delta_last_update > 6) {
                             document.getElementById('nossaLastUpdateValue').classList.add("btn-warning");
                             document.getElementById('nossaLastUpdateValue').classList.remove("btn-success");
+                            document.getElementById('nossaLastUpdateCard').classList.add("btn-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-success");
                         } else {
                             document.getElementById('nossaLastUpdateValue').classList.remove("btn-warning");
                             document.getElementById('nossaLastUpdateValue').classList.add("btn-success");
+                            document.getElementById('nossaLastUpdateCard').classList.remove("btn-warning");
+                            document.getElementById('nossaLastUpdateCard').classList.add("btn-success");
                         }
 
                     }
