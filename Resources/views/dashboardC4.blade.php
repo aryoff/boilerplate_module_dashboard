@@ -50,7 +50,7 @@
                     <h3 class="card-title">Nossa LUP</h3>
                 </div>
                 <div class="card-body">
-                    <h4 class="d-flex justify-content-center mx-auto"><span class="badge btn-danger mx-0 px-0" id="nossaLastUpdateValue"></span></h4>
+                    <h4 class="d-flex justify-content-center mx-auto"><span class="mx-0 px-0" id="nossaLastUpdateValue"></span></h4>
                 </div>
             </div>
         </div>
