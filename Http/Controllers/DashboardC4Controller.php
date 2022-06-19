@@ -6,6 +6,7 @@ use DateTime;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 define('CAMPAIGN_C4', array(2, 3, 4, 5, 9, 14));
@@ -22,7 +23,7 @@ class DashboardC4Controller extends Controller
     }
     public function get_data_campaign()
     {
-        $campaign_c4 = array(2, 3, 4, 5, 9, 14);
+        $campaign_c4 = CAMPAIGN_C4;
         $response = array();
         $temp = new \stdClass;
         $temp->nama = 'no data';
@@ -110,7 +111,7 @@ class DashboardC4Controller extends Controller
     }
     public function get_total_agent_online()
     {
-        $campaign_c4 = array(2, 3, 4, 5, 9, 14);
+        $campaign_c4 = CAMPAIGN_C4;
         $summary = array(
             'online' => 0,
             'aux' => 0,
