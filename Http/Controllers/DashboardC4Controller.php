@@ -24,7 +24,7 @@ class DashboardC4Controller extends Controller
     public function get_data_campaign()
     {
         $campaign_c4 = CAMPAIGN_C4;
-        $response = array();
+        $data = array();
         $temp = new \stdClass;
         $temp->nama = 'no data';
         $temp->total = 0;
@@ -49,9 +49,12 @@ class DashboardC4Controller extends Controller
                     }
                 }
                 $temp->staffed = $staffed;
-                $response[] = $temp;
+                $data[] = $temp;
             }
         }
+        $response = array(
+            'data' => $data,
+        );
         return response()->json($response, 200);
     }
     public function get_last_update_nossa()

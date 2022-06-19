@@ -12,6 +12,14 @@
                     <h3 class="card-title">Campaign</h3>
                 </div>
                 <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tableRealtimeCampaign" class="table-striped no-margin" style="width:100%">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,10 +93,65 @@
             }
         });
         var tableRealtimeStaff;
+        var tableRealtimeCampaign;
         generateTableRealtimeStaff();
+        generateTableRealtimeCampaign();
         getTotalAgentOnline();
         getLastUpdateNossa();
-        // getDataCampaign();
+        function generateTableRealtimeCampaign() {
+            $.ajax({
+                url: "{{ url('/dashboard/getDataCampaignC4') }}",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if ($.fn.DataTable.isDataTable('#tableRealtimeCampaign')) {
+                        tableRealtimeCampaign.destroy();
+                        $('#tableRealtimeCampaign').empty();
+                    }
+                    tableRealtimeCampaign = $('#tableRealtimeCampaign').DataTable({
+                        "searching": false,
+                        "info": false,
+                        "paging": false,
+                        "stateSave": true,
+                        "data": data.data,
+                        "columns": [{
+                                "data": "nama",
+                                "title": "Nama Campaign"
+                            },
+                            {
+                                "data": "total",
+                                "title": "WO",
+                            },
+                            {
+                                "data": "sisa",
+                                "title": "Saldo",
+                            },
+                            {
+                                "data": "assigned",
+                                "title": "Assign",
+                            },
+                            {
+                                "data": "pickup",
+                                "title": "Picked Up",
+                            },
+                            {
+                                "data": "submit",
+                                "title": "Submit",
+                            },
+                            {
+                                "data": "staffed",
+                                "title": "Staff",
+                            },
+                        ],
+                    });
+                    setTimeout(generateTableRealtimeCampaign, 60000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
         function generateTableRealtimeStaff() {
             $.ajax({
                 url: "{{ url('/dashboard/getRealtimeStaffC4') }}",
@@ -305,29 +368,6 @@
 
                     }
                     setTimeout(getLastUpdateNossa, 60000);
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            })
-        }
-
-        function getDataCampaign() {
-            $.ajax({
-                url: "{{ url('/dashboard/getDataCampaignC4') }}",
-                type: "GET",
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                    let mainContainer = document.getElementById('dataCampaign');
-                    mainContainer.innerHTML = '';
-                    data.forEach(element => {
-                        let tempElement = document.createElement('div');
-                        tempElement.setAttribute('class', 'row');
-                        tempElement.innerHTML = '<div class="col-4 mt-2"><span class="text-left" style="font-weight: bold; width: 100%; font-size: 11px;">' + element.nama + '</span></div><div class="col-8 mt-2"><div class="row"><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.total + '</span></div><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.sisa + '</span></div><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.assigned + '</span></div><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.pickup + '</span></div><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.submit + '</span></div><div class="col-2 text-center mt-2"><span class="badge btn-light" style="font-weight: bold; width: 100%;">' + element.staffed + '</span></div></div></div>';
-                        mainContainer.appendChild(tempElement);
-                    });
-                    setTimeout(getDataCampaign, 60000);
                 },
                 error: function (data) {
                     console.log(data);
