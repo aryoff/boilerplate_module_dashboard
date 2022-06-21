@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
-define('CAMPAIGN_T2', array(13));
+define('CAMPAIGN_T2', array(12, 13));
 class DashboardT2Controller extends Controller
 {
     /**
@@ -82,6 +82,9 @@ class DashboardT2Controller extends Controller
         $response = new \stdClass;
         $name = array();
         $count = array();
+        $consumed = array();
+        $totalCount = 0;
+        $totalConsumed = 0;
         foreach (CAMPAIGN_T2 as $value) {
             $query = DB::select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
             $parameter = json_decode($query->parameter);
@@ -90,10 +93,17 @@ class DashboardT2Controller extends Controller
                 $filter = $parameter->filter;
             }
             $name[] = $query->name;
-            $count[] = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;")[0]->count;
+            $tempCount = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;")[0]->count;
+            $count[] = $tempCount;
+            $totalCount += $tempCount;
+            $tempConsumed = DB::select("SELECT COUNT (*) AS count FROM (SELECT DISTINCT unique_key,dynamicticket_categorie_id,dynamicticket_escalation_campaign_id FROM dynamicticket_escalation_logs WHERE dynamicticket_escalation_campaign_id=? AND created_at::DATE=CURRENT_DATE) A", [$value])[0]->count;
+            $consumed[] = $tempConsumed;
+            $totalConsumed += $tempConsumed;
         }
         $response->name = $name;
         $response->count = $count;
+        $response->total_count = array($totalCount, $tempConsumed);
+        $response->total_label = array('Waitlist', 'Consumed');
         return response()->json(json_encode($response), 200);
     }
 }
