@@ -410,6 +410,10 @@
                 success: function (data) {
                     if (data) {
                         console.log(JSON.parse(data))
+                        waitlistPerCampaignChart.data.datasets[0].data = JSON.parse(data).count;
+                        waitlistPerCampaignChart.data.labels = JSON.parse(data).name;
+                        waitlistPerCampaignChart.update();
+
 
                     }
                     setTimeout(getWaitlistT2, 60000);
@@ -423,9 +427,6 @@
         getWaitlistT2();
 
         function updateCharts() {
-            waitlistPerCampaignChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
-            waitlistPerCampaignChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-            waitlistPerCampaignChart.update();
             topOccupancyChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
             topOccupancyChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
             topOccupancyChart.update();

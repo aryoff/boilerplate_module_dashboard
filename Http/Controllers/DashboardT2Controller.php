@@ -90,7 +90,7 @@ class DashboardT2Controller extends Controller
                 $filter = $parameter->filter;
             }
             $name[] = $query->name;
-            $count[] = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;");
+            $count[] = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;")[0]->count;
         }
         $response->name = $name;
         $response->count = $count;
