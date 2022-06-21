@@ -495,14 +495,29 @@
                                     "data": "status_duration",
                                     "title": "Durasi",
                                     "render": function (data, type, row, meta) {
-                                        // let num;
-                                        // if (data == 0) {
-                                        //     num = 0;
-                                        // } else {
-                                        //     num = data / 60;
-                                        // }
-                                        // return num.toFixed(2);
-                                        return data;
+                                        let num;
+                                        let ret;
+                                        if (data == 0) {
+                                            ret = '00:00:00';
+                                        } else {
+                                            num = data;
+                                            let sec = num % 60;
+                                            if (sec<10) {
+                                                ret = '0'+sec;
+                                            } else {
+                                                ret = sec;
+                                            }
+                                            num = num / 60;
+                                            let min = num % 60;
+                                            if (min<10) {
+                                                ret = '0'+min+':'+ret;
+                                            } else {
+                                                ret = min+':'+ret;
+                                            }
+                                            let hour = num / 60;
+                                            ret = hour+':'+ret;
+                                        }
+                                        return ret;
                                     }
                                 },
                             ],
@@ -540,18 +555,5 @@
         }
         getTotalAgentOnlineT2();
         getWaitlistT2();
-        function updateTable(id) {
-            $.ajax({
-                url: "/dynamicticket/getreport",
-                data: {
-                    category_id: id,
-                    mode: 'header'
-                },
-                type: "POST",
-                dataType: 'json',
-                success: function (result) {
-                }
-            });
-        }
     </script>
 @endsection
