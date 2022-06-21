@@ -385,6 +385,42 @@
                 }
             });
         }
+        function getTotalAgentOnlineT2() {
+            $.ajax({
+                url: "{{ url('/dashboard/getTotalAgentOnlineT2') }}",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        console.log(data)
+
+                    }
+                    setTimeout(getTotalAgentOnlineT2, 60000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+        function getWaitlistT2() {
+            $.ajax({
+                url: "{{ url('/dashboard/getWaitlistT2') }}",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        console.log(data)
+
+                    }
+                    setTimeout(getWaitlistT2, 60000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+        getTotalAgentOnlineT2();
+
         function updateCharts() {
             waitlistPerCampaignChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
             waitlistPerCampaignChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
