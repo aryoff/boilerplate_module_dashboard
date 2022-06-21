@@ -409,7 +409,7 @@
                 dataType: "json",
                 success: function (data) {
                     if (data) {
-                        console.log(data)
+                        console.log(JSON.parse(data))
 
                     }
                     setTimeout(getWaitlistT2, 60000);
@@ -420,6 +420,7 @@
             })
         }
         getTotalAgentOnlineT2();
+        getWaitlistT2();
 
         function updateCharts() {
             waitlistPerCampaignChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
