@@ -69,6 +69,7 @@ class DashboardT2Controller extends Controller
             $temp->total_call = $value->total_call;
             $data[] = $temp;
         }
+        $response->data = $data;
         $response->$summary = $summary;
         return response()->json(json_encode($response), 200);
     }
