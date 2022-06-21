@@ -71,7 +71,11 @@ class DashboardT2Controller extends Controller
         }
         $response->data = $data;
         $response->summary = $summary;
-        return response()->json(json_encode($response), 200);
+        if (count($result) > 0) {
+            return response()->json(json_encode($response), 200);
+        } else {
+            return response()->json(false, 200);
+        }
     }
     public function getWaitlistT2()
     {
