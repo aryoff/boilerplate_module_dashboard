@@ -70,7 +70,7 @@ class DashboardT2Controller extends Controller
             $data[] = $temp;
         }
         $response->data = $data;
-        $response->$summary = $summary;
+        $response->summary = $summary;
         return response()->json(json_encode($response), 200);
     }
     public function getWaitlistT2()
