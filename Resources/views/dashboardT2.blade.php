@@ -392,7 +392,7 @@
                 dataType: "json",
                 success: function (data) {
                     if (data) {
-                        console.log(data)
+                        console.log(JSON.parse(data))
 
                     }
                     setTimeout(getTotalAgentOnlineT2, 60000);
