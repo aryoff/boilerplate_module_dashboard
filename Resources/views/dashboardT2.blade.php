@@ -409,7 +409,6 @@
                 dataType: "json",
                 success: function (data) {
                     if (data) {
-                        console.log(JSON.parse(data))
                         let jParse = JSON.parse(data);
                         waitlistPerCampaignChart.data.datasets[0].data = jParse.count;
                         waitlistPerCampaignChart.data.labels = jParse.name;
@@ -417,8 +416,6 @@
                         waitlistChart.data.datasets[0].data = jParse.total_count;
                         waitlistChart.data.labels = jParse.total_label;
                         waitlistChart.update();
-
-
                     }
                     setTimeout(getWaitlistT2, 60000);
                 },

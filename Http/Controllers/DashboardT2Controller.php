@@ -86,23 +86,22 @@ class DashboardT2Controller extends Controller
         $totalCount = 0;
         $totalConsumed = 0;
         foreach (CAMPAIGN_T2 as $value) {
-            $query = DB::select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
+            $query = DB::connection('mirror')->select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
             $parameter = json_decode($query->parameter);
             $filter = "SELECT * FROM dynamicticket_datas WHERE dynamicticket_categorie_id=" . $parameter->category_id; //basic default filter
             if (property_exists($parameter, 'filter')) {
                 $filter = $parameter->filter;
             }
             $name[] = $query->name;
-            $tempCount = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;")[0]->count;
-            $count[] = $tempCount;
-            $totalCount += $tempCount;
-            $tempConsumed = DB::select("SELECT COUNT (*) AS count FROM (SELECT DISTINCT unique_key,dynamicticket_categorie_id,dynamicticket_escalation_campaign_id FROM dynamicticket_escalation_logs WHERE dynamicticket_escalation_campaign_id=? AND created_at::DATE=CURRENT_DATE) A", [$value])[0]->count;
-            $consumed[] = $tempConsumed;
-            $totalConsumed += $tempConsumed;
+            $temp = DB::connection('mirror')->select("SELECT COUNT(*) AS count,SUM(CASE WHEN jsonb_exists(status, '12') THEN 1 ELSE 0 END) AS consumed FROM ($filter)A;")[0];
+            $count[] = $temp->count;
+            $totalCount += $temp->count;
+            $consumed[] = $temp->consumed;
+            $totalConsumed += $temp->consumed;
         }
         $response->name = $name;
         $response->count = $count;
-        $response->total_count = array($totalCount, $tempConsumed);
+        $response->total_count = array($totalCount, $totalConsumed);
         $response->total_label = array('Waitlist', 'Consumed');
         return response()->json(json_encode($response), 200);
     }
