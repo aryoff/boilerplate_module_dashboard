@@ -395,7 +395,7 @@
                         console.log(JSON.parse(data))
 
                     }
-                    setTimeout(getTotalAgentOnlineT2, 60000);
+                    // setTimeout(getTotalAgentOnlineT2, 60000);
                 },
                 error: function (data) {
                     console.log(data);
