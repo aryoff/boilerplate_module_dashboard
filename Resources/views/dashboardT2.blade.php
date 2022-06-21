@@ -410,9 +410,13 @@
                 success: function (data) {
                     if (data) {
                         console.log(JSON.parse(data))
-                        waitlistPerCampaignChart.data.datasets[0].data = JSON.parse(data).count;
-                        waitlistPerCampaignChart.data.labels = JSON.parse(data).name;
+                        let jParse = JSON.parse(data);
+                        waitlistPerCampaignChart.data.datasets[0].data = jParse.count;
+                        waitlistPerCampaignChart.data.labels = jParse.name;
                         waitlistPerCampaignChart.update();
+                        waitlistChart.data.datasets[0].data = jParse.total_count;
+                        waitlistChart.data.labels = jParse.total_label;
+                        waitlistChart.update();
 
 
                     }
@@ -433,9 +437,6 @@
             bottomOccupancyChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
             bottomOccupancyChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
             bottomOccupancyChart.update();
-            waitlistChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
-            waitlistChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-            waitlistChart.update();
         }
         function updateTable(id) {
             $.ajax({
