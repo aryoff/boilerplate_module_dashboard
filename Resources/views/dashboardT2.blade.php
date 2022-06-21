@@ -392,10 +392,124 @@
                 dataType: "json",
                 success: function (data) {
                     if (data) {
-                        console.log(JSON.parse(data))
+                        let jParse = JSON.parse(data);
+                        topOccupancyChart.data.datasets[0].data = jParse.top_value;
+                        topOccupancyChart.data.labels = jParse.top_label;
+                        topOccupancyChart.update();
+                        bottomOccupancyChart.data.datasets[0].data = jParse.bottom_value;
+                        bottomOccupancyChart.data.labels = jParse.bottom_label;
+                        bottomOccupancyChart.update();
+
+
+                        if ($.fn.DataTable.isDataTable('#topAgentStatusTable')) {
+                            topAgentStatusTable.destroy();
+                            $('#topAgentStatusTable').empty();
+                        }
+                        topAgentStatusTable = $('#topAgentStatusTable').DataTable({
+                            "fixedHeader": {
+                                header: true,
+                                footer: true
+                            },
+                            "initComplete": function (settings, json) {
+                                $("#topAgentStatusTable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                            //     this.api().columns('campaign_name:name').every(function () {
+                            //         let column = this;
+                            //         let select = $('<select><option value="" selected>All Campaign</option></select>')
+                            //             .appendTo($(column.header()).empty())
+                            //             .on('change', function () {
+                            //                 let val = $.fn.dataTable.util.escapeRegex(
+                            //                     $(this).val()
+                            //                 );
+                            //                 column
+                            //                     .search(val ? '^' + val + '$' : '', true, false)
+                            //                     .draw();
+                            //             });
+                            //         column.data().unique().sort().each(function (d, j) {
+                            //             select.append('<option value="' + d + '">' + d + '</option>')
+                            //         });
+                            //     });
+                            },
+                            "lengthMenu": [
+                                [10, 25, 50, 100, -1],
+                                [10, 25, 50, 100, "All"]
+                            ],
+                            "pageLength": 10,
+                            "scrollY": "250px",
+                            "scrollCollapse": true,
+                            "paging": true,
+                            "stateSave": true,
+                            "data": jParse.data,
+                            "columns": [{
+                                    "data": "agent_name",
+                                    "title": "Nama Agent"
+                                },
+                                {
+                                    "data": "agent_status",
+                                    "title": "Status",
+                                    "render": function (data, type, row, meta) {
+                                        switch (data) {
+                                            case 'online':
+                                                return '<h4 class="badge btn-success">Online</h4>';
+                                                break;
+                                            case 'offline':
+                                                return '<h4 class="badge btn-danger">Offline</h4>';
+                                                break;
+                                            case 'aux_1':
+                                                return '<h4 class="badge btn-warning">Konsultasi</h4>';
+                                                break;
+                                            case 'aux_2':
+                                                return '<h4 class="badge btn-warning">Supporting</h4>';
+                                                break;
+                                            case 'aux_3':
+                                                return '<h4 class="badge btn-warning">Gangguan</h4>';
+                                                break;
+                                            case 'aux_4':
+                                                return '<h4 class="badge btn-warning">Toilet</h4>';
+                                                break;
+                                            case 'aux_5':
+                                                return '<h4 class="badge btn-warning">Air Minum</h4>';
+                                                break;
+                                            case 'aux_6':
+                                                return '<h4 class="badge btn-warning">Sholat</h4>';
+                                                break;
+                                            case 'aux_7':
+                                                return '<h4 class="badge btn-warning">Lunch Break</h4>';
+                                                break;
+                                            case 'aux_8':
+                                                return '<h4 class="badge btn-warning">Briefing</h4>';
+                                                break;
+                                            case 'aux_9':
+                                                return '<h4 class="badge btn-warning">Update System</h4>';
+                                                break;
+                                            default:
+                                                return '<h4 class="badge btn-info">No Data</h4>';
+                                                break;
+                                        }
+                                    }
+                                },
+                                {
+                                    "data": "connected_number",
+                                    "title": "Connected Number"
+                                },
+                                {
+                                    "data": "status_duration",
+                                    "title": "Durasi",
+                                    "render": function (data, type, row, meta) {
+                                        // let num;
+                                        // if (data == 0) {
+                                        //     num = 0;
+                                        // } else {
+                                        //     num = data / 60;
+                                        // }
+                                        // return num.toFixed(2);
+                                        return data;
+                                    }
+                                },
+                            ],
+                        });
 
                     }
-                    // setTimeout(getTotalAgentOnlineT2, 60000);
+                    setTimeout(getTotalAgentOnlineT2, 60000);
                 },
                 error: function (data) {
                     console.log(data);
@@ -426,15 +540,6 @@
         }
         getTotalAgentOnlineT2();
         getWaitlistT2();
-
-        function updateCharts() {
-            topOccupancyChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
-            topOccupancyChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-            topOccupancyChart.update();
-            bottomOccupancyChart.data.datasets[0].data = [12, 19, 3, 5, 2, 3];
-            bottomOccupancyChart.data.labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-            bottomOccupancyChart.update();
-        }
         function updateTable(id) {
             $.ajax({
                 url: "/dynamicticket/getreport",
@@ -445,34 +550,8 @@
                 type: "POST",
                 dataType: 'json',
                 success: function (result) {
-                    if ($.fn.DataTable.isDataTable('#topAgentStatusTable')) {
-                        topAgentStatusTable.destroy();
-                        $('#topAgentStatusTable').empty();
-                    }
-                    topAgentStatusTable = $('#topAgentStatusTable').DataTable({
-                        "fixedHeader": {
-                            header: true,
-                            footer: true
-                        },
-                        "scrollX": true,
-                        "lengthMenu": [
-                            [10, 25, 50, 100, -1],
-                            [10, 25, 50, 100, "All"]
-                        ],
-                        "stateSave": true,
-                        "ajax": {
-                            "url": "/dynamicticket/getreport",
-                            "data": {
-                                category_id: id,
-                                mode: 'data'
-                            },
-                            "type": "POST",
-                        },
-                        "columns": result,
-                    });
                 }
             });
         }
-        updateCharts();
     </script>
 @endsection
