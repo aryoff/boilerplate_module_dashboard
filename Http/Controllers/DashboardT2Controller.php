@@ -84,9 +84,10 @@ class DashboardT2Controller extends Controller
         $count = array();
         foreach (CAMPAIGN_T2 as $value) {
             $query = DB::select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
-            $filter = "SELECT * FROM dynamicticket_datas WHERE dynamicticket_categorie_id=" . $query->parameter->category_id; //basic default filter
-            if (property_exists($query->parameter, 'filter')) {
-                $filter = $query->parameter->filter;
+            $parameter = json_decode($query->parameter);
+            $filter = "SELECT * FROM dynamicticket_datas WHERE dynamicticket_categorie_id=" . $parameter->category_id; //basic default filter
+            if (property_exists($parameter, 'filter')) {
+                $filter = $parameter->filter;
             }
             $name[] = $query->name;
             $count[] = DB::select("SELECT COUNT(*) AS count FROM ($filter)A;");
