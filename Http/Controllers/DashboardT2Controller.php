@@ -26,7 +26,7 @@ class DashboardT2Controller extends Controller
             $return .= $value . ",";
         }
         if ($return != '') {
-            $return = substr($return, 1, strlen($return) - 1);
+            $return = substr($return, 0, strlen($return) - 1);
         }
         return $return;
     }
