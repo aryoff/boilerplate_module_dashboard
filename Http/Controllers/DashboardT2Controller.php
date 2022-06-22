@@ -77,7 +77,7 @@ class DashboardT2Controller extends Controller
             }
             $temp->total_online = $total_online;
             $temp->agent_name = $value->agent_name;
-            $temp->pbx_status = $value->pbx_status;
+            $temp->pbx_status = $value->agent_status;
             $temp->connected_number = $value->connected_number;
             $temp->status_duration = $value->status_duration;
             $temp->handlingtime = $value->handlingtime;
