@@ -75,7 +75,7 @@ class DashboardT2Controller extends Controller
                 $temp->status_duration = $value->status_duration;
                 $temp->handlingtime = $value->handlingtime;
                 $temp->holdtime = $value->holdtime;
-                $temp->stafftime = $value->total_online;
+                $temp->stafftime = $total_online;
                 $temp->total_call = $value->total_call;
                 if ((int)$value->stafftime > 0) {
                     $temp->occupancy = round($value->handlingtime / $value->stafftime, 2) * 100;
