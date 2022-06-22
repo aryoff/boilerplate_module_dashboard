@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use DateTime;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -58,6 +59,15 @@ class DashboardT2Controller extends Controller
                         $summary[$summaryKey]++;
                     }
                 }
+                $total_online = 0;
+                if (property_exists($payload, 'totalOnline')) {
+                    $total_online += $payload->totalOnline;
+                }
+                if (property_exists($payload, 'onlineDatetime')) {
+                    $diff = (array) date_diff(new DateTime('now'), $payload->onlineDatetime);
+                    $total_online += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
+                }
+
                 $temp = new \stdClass;
                 $temp->agent_name = $value->agent_name;
                 $temp->agent_status = $value->agent_status;
@@ -65,7 +75,7 @@ class DashboardT2Controller extends Controller
                 $temp->status_duration = $value->status_duration;
                 $temp->handlingtime = $value->handlingtime;
                 $temp->holdtime = $value->holdtime;
-                $temp->stafftime = $value->stafftime;
+                $temp->stafftime = $value->total_online;
                 $temp->total_call = $value->total_call;
                 if ((int)$value->stafftime > 0) {
                     $temp->occupancy = round($value->handlingtime / $value->stafftime, 2) * 100;
