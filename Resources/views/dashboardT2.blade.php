@@ -482,7 +482,7 @@
                                                 return '<h4 class="badge btn-warning">Update System</h4>';
                                                 break;
                                             default:
-                                                return '<h4 class="badge btn-info">No Data</h4>';
+                                                return '<h4 class="badge btn-info">'+data+'</h4>';
                                                 break;
                                         }
                                     }
@@ -507,14 +507,14 @@
                                             } else {
                                                 ret = sec;
                                             }
-                                            num = num / 60;
+                                            num = (num-sec) / 60;
                                             let min = num % 60;
                                             if (min<10) {
                                                 ret = '0'+min+':'+ret;
                                             } else {
                                                 ret = min+':'+ret;
                                             }
-                                            let hour = num / 60;
+                                            let hour = (num-min) / 60;
                                             ret = hour+':'+ret;
                                         }
                                         return ret;
