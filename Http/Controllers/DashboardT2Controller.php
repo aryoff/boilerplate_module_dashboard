@@ -51,39 +51,46 @@ class DashboardT2Controller extends Controller
         $data = array();
         $occ = array();
         foreach ($result as $value) {
+            $temp = new \stdClass;
             $payload = (object) unserialize(unserialize(Crypt::decryptString(base64_decode($value->payload))));
-            if (property_exists($payload, 'userEscalationStatus')) { //ini payload isinya semua data session
-                $status = $payload->userEscalationStatus;
-                foreach ($summary as $summaryKey => $summaryValue) {
-                    if ($summaryKey == $status || $summaryKey == substr($status, 0, 3)) {
-                        $summary[$summaryKey]++;
-                    }
+            if (property_exists($payload, 'userEscalationStatus')) {
+                $temp->distribution_status = $payload->userEscalationStatus;
+                $total_aux = 0;
+                if (property_exists($payload, 'totalAux')) {
+                    $total_aux = $payload->totalAux;
                 }
-                $total_online = 0;
-                if (property_exists($payload, 'totalOnline')) {
-                    $total_online += $payload->totalOnline;
+                if (substr($temp->distribution_status, 0, 3) == 'aux') {
+                    $diff = (array) date_diff(new DateTime('now'), $payload->auxDatetime);
+                    $total_aux += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
                 }
-                if (property_exists($payload, 'onlineDatetime')) {
-                    $diff = (array) date_diff(new DateTime('now'), $payload->onlineDatetime);
-                    $total_online += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
-                }
-                $temp = new \stdClass;
-                $temp->agent_name = $value->agent_name;
-                $temp->agent_status = $value->agent_status;
-                $temp->connected_number = $value->connected_number;
-                $temp->status_duration = $value->status_duration;
-                $temp->handlingtime = $value->handlingtime;
-                $temp->holdtime = $value->holdtime;
-                $temp->stafftime = $total_online;
-                $temp->total_call = $value->total_call;
-                if ((int)$total_online > 0) {
-                    $temp->occupancy = round(($value->handlingtime / $total_online) * 100, 0);
-                } else {
-                    $temp->occupancy = 0;
-                }
-                $occ[$value->agent_name] = $temp->occupancy;
-                $data[] = $temp;
+                $temp->total_aux = $total_aux;
+            } else {
+                $temp->distribution_status = 'offline';
             }
+            $total_online = 0;
+            if (property_exists($payload, 'totalOnline')) {
+                $total_online += $payload->totalOnline;
+            }
+            if (property_exists($payload, 'onlineDatetime')) {
+                $diff = (array) date_diff(new DateTime('now'), $payload->onlineDatetime);
+                $total_online += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
+            }
+            $temp->total_online = $total_online;
+            $temp->agent_name = $value->agent_name;
+            $temp->pbx_status = $value->pbx_status;
+            $temp->connected_number = $value->connected_number;
+            $temp->status_duration = $value->status_duration;
+            $temp->handlingtime = $value->handlingtime;
+            $temp->holdtime = $value->holdtime;
+            $temp->stafftime = $total_online;
+            $temp->total_call = $value->total_call;
+            if ((int)$total_online > 0) {
+                $temp->occupancy = round(($value->handlingtime / $total_online) * 100, 0);
+            } else {
+                $temp->occupancy = 0;
+            }
+            $occ[$value->agent_name] = $temp->occupancy;
+            $data[] = $temp;
         }
         $top_val = array();
         $top_label = array();
