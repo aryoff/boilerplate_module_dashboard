@@ -58,23 +58,23 @@ class DashboardT2Controller extends Controller
                         $summary[$key]++;
                     }
                 }
+                $temp = new \stdClass;
+                $temp->agent_name = $value->agent_name;
+                $temp->agent_status = $value->agent_status;
+                $temp->connected_number = $value->connected_number;
+                $temp->status_duration = $value->status_duration;
+                $temp->handlingtime = $value->handlingtime;
+                $temp->holdtime = $value->holdtime;
+                $temp->stafftime = $value->stafftime;
+                $temp->total_call = $value->total_call;
+                if ((int)$value->stafftime > 0) {
+                    $temp->occupancy = round($value->handlingtime / $value->stafftime, 2) * 100;
+                } else {
+                    $temp->occupancy = 0;
+                }
+                $occ[$value->agent_name] = $temp->occupancy;
+                $data[] = $temp;
             }
-            $temp = new \stdClass;
-            $temp->agent_name = $value->agent_name;
-            $temp->agent_status = $value->agent_status;
-            $temp->connected_number = $value->connected_number;
-            $temp->status_duration = $value->status_duration;
-            $temp->handlingtime = $value->handlingtime;
-            $temp->holdtime = $value->holdtime;
-            $temp->stafftime = $value->stafftime;
-            $temp->total_call = $value->total_call;
-            if ((int)$value->stafftime > 0) {
-                $temp->occupancy = round($value->handlingtime / $value->stafftime, 2) * 100;
-            } else {
-                $temp->occupancy = 0;
-            }
-            $occ[$value->agent_name] = $temp->occupancy;
-            $data[] = $temp;
         }
         $top_val = array();
         $top_label = array();
