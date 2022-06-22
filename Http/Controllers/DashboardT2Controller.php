@@ -95,7 +95,7 @@ class DashboardT2Controller extends Controller
         $top_val = array();
         $top_label = array();
         $count = 0;
-        ksort($occ);
+        arsort($occ);
         foreach ($occ as $key => $value) {
             $top_label[] = $key;
             $top_val[] = $value;
