@@ -46,16 +46,16 @@ class DashboardT2Controller extends Controller
             'aux_8' => 0,
             'aux_9' => 0,
         );
-        $result = DB::connection(MIRROR)->select("SELECT core_sessions.*,X.* ,mizuvoip_cagent.agent_status,COALESCE (mizuvoip_cagent.connected_number,'') AS connected_number,mizuvoip_cagent.status_duration,COALESCE(mizuvoip_dagent.handlingtime,0)AS handlingtime,COALESCE(mizuvoip_dagent.holdtime,0)AS holdtime,COALESCE(mizuvoip_dagent.stafftime,0)AS stafftime,COALESCE(mizuvoip_dagent.total_call,0)AS total_call,core_users.NAME AS agent_name FROM core_sessions INNER JOIN (SELECT user_id AS uid,MAX (last_activity) AS maxed FROM core_sessions WHERE user_id IS NOT NULL GROUP BY user_id) X ON core_sessions.user_id=X.uid AND core_sessions.last_activity> EXTRACT (EPOCH FROM NOW()-INTERVAL '120 MINUTES') AND core_sessions.last_activity=X.maxed INNER JOIN (SELECT ID,NAME FROM core_users WHERE jsonb_extract_path_text (additional_data,'dynamicticket','escalation_campaign','0') :: INTEGER IN (" . $this->generateListT2() . ")) core_users ON core_users.ID=core_sessions.user_id INNER JOIN (SELECT*FROM mizuvoip_cagent WHERE updated_at::DATE=CURRENT_DATE)mizuvoip_cagent ON core_users.ID=mizuvoip_cagent.core_user_id LEFT JOIN mizuvoip_dagent ON core_users.ID=mizuvoip_dagent.core_user_id AND mizuvoip_dagent.row_date=CURRENT_DATE");
+        $result = DB::connection(MIRROR)->select("SELECT core_sessions.*,X.* ,mizuvoip_cagent.agent_status,COALESCE (mizuvoip_cagent.connected_number,'') AS connected_number,mizuvoip_cagent.status_duration,COALESCE(mizuvoip_dagent.handlingtime,0)AS handlingtime,COALESCE(mizuvoip_dagent.holdtime,0)AS holdtime,COALESCE(mizuvoip_dagent.stafftime,0)AS stafftime,COALESCE(mizuvoip_dagent.total_call,0)AS total_call,core_users.NAME AS agent_name FROM core_sessions INNER JOIN (SELECT user_id AS uid,MAX (last_activity) AS maxed FROM core_sessions WHERE user_id IS NOT NULL GROUP BY user_id) X ON core_sessions.user_id=X.uid AND core_sessions.last_activity> EXTRACT (EPOCH FROM NOW()-INTERVAL '120 MINUTES') AND core_sessions.last_activity=X.maxed INNER JOIN (SELECT ID,NAME FROM core_users WHERE jsonb_extract_path_text (additional_data,'dynamicticket','escalation_campaign','0') :: INTEGER IN (" . $this->generateListT2() . ")) core_users ON core_users.ID=core_sessions.user_id INNER JOIN (SELECT*FROM mizuvoip_cagent WHERE updated_at::DATE=CURRENT_DATE)mizuvoip_cagent ON core_users.ID=mizuvoip_cagent.core_user_id LEFT JOIN mizuvoip_dagent ON core_users.ID=mizuvoip_dagent.core_user_id AND mizuvoip_dagent.row_date=CURRENT_DATE"); //TODO subquery cagent harus diubah
         $data = array();
         $occ = array();
         foreach ($result as $value) {
             $payload = (object) unserialize(unserialize(Crypt::decryptString(base64_decode($value->payload))));
             if (property_exists($payload, 'userEscalationStatus')) { //ini payload isinya semua data session
                 $status = $payload->userEscalationStatus;
-                foreach ($summary as $key => $value) {
-                    if ($key == $status || $key == substr($status, 0, 3)) {
-                        $summary[$key]++;
+                foreach ($summary as $summaryKey => $summaryValue) {
+                    if ($summaryKey == $status || $summaryKey == substr($status, 0, 3)) {
+                        $summary[$summaryKey]++;
                     }
                 }
                 $temp = new \stdClass;
