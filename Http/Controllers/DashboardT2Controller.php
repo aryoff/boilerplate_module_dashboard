@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 define('CAMPAIGN_T2', array(12, 13));
-define('MIRROR', 'mirror');
 class DashboardT2Controller extends Controller
 {
     /**
