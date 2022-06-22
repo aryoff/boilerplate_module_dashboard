@@ -43,7 +43,7 @@ class DashboardController extends Controller
     public function template()
     {
         $user = json_decode(Auth::user()->additional_data);
-        if (property_exists($user, 'user_nossa') && property_exists($user, 'dynamicticket') && property_exists($user->dynamicticket, 'escalation_campaign')) {
+        if (is_object($user) && property_exists($user, 'user_nossa') && property_exists($user, 'dynamicticket') && property_exists($user->dynamicticket, 'escalation_campaign')) {
             $response = array();
             $temp = array();
             $temp['background'] = 'bg-secondary';
