@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 define('CAMPAIGN_T2', array(12, 13));
+define('MIRROR', 'mirror');
 class DashboardT2Controller extends Controller
 {
     /**
@@ -46,7 +47,7 @@ class DashboardT2Controller extends Controller
             'aux_8' => 0,
             'aux_9' => 0,
         );
-        $result = DB::connection('mirror')->select("SELECT core_sessions.*,X.* ,mizuvoip_cagent.agent_status,COALESCE (mizuvoip_cagent.connected_number,'') AS connected_number,mizuvoip_cagent.status_duration,mizuvoip_dagent.handlingtime,mizuvoip_dagent.holdtime,mizuvoip_dagent.stafftime,mizuvoip_dagent.total_call,core_users.NAME AS agent_name FROM core_sessions INNER JOIN (SELECT user_id AS uid,MAX (last_activity) AS maxed FROM core_sessions WHERE user_id IS NOT NULL GROUP BY user_id) X ON core_sessions.user_id=X.uid AND core_sessions.last_activity> EXTRACT (EPOCH FROM NOW()-INTERVAL '120 MINUTES') AND core_sessions.last_activity=X.maxed INNER JOIN (SELECT ID,NAME FROM core_users WHERE jsonb_extract_path_text (additional_data,'dynamicticket','escalation_campaign','0') :: INTEGER IN (" . $this->generateListT2() . ")) core_users ON core_users.ID=core_sessions.user_id INNER JOIN mizuvoip_cagent ON core_users.ID=mizuvoip_cagent.core_user_id INNER JOIN mizuvoip_dagent ON core_users.ID=mizuvoip_dagent.core_user_id AND mizuvoip_dagent.row_date=CURRENT_DATE");
+        $result = DB::connection(MIRROR)->select("SELECT core_sessions.*,X.* ,mizuvoip_cagent.agent_status,COALESCE (mizuvoip_cagent.connected_number,'') AS connected_number,mizuvoip_cagent.status_duration,COALESCE(mizuvoip_dagent.handlingtime,0)AS handlingtime,COALESCE(mizuvoip_dagent.holdtime,0)AS holdtime,COALESCE(mizuvoip_dagent.stafftime,0)AS stafftime,COALESCE(mizuvoip_dagent.total_call,0)AS total_call,core_users.NAME AS agent_name FROM core_sessions INNER JOIN (SELECT user_id AS uid,MAX (last_activity) AS maxed FROM core_sessions WHERE user_id IS NOT NULL GROUP BY user_id) X ON core_sessions.user_id=X.uid AND core_sessions.last_activity> EXTRACT (EPOCH FROM NOW()-INTERVAL '120 MINUTES') AND core_sessions.last_activity=X.maxed INNER JOIN (SELECT ID,NAME FROM core_users WHERE jsonb_extract_path_text (additional_data,'dynamicticket','escalation_campaign','0') :: INTEGER IN (" . $this->generateListT2() . ")) core_users ON core_users.ID=core_sessions.user_id INNER JOIN mizuvoip_cagent ON core_users.ID=mizuvoip_cagent.core_user_id LEFT JOIN mizuvoip_dagent ON core_users.ID=mizuvoip_dagent.core_user_id AND mizuvoip_dagent.row_date=CURRENT_DATE");
         $data = array();
         $occ = array();
         foreach ($result as $value) {
@@ -121,14 +122,14 @@ class DashboardT2Controller extends Controller
         $totalCount = 0;
         $totalConsumed = 0;
         foreach (CAMPAIGN_T2 as $value) {
-            $query = DB::connection('mirror')->select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
+            $query = DB::connection(MIRROR)->select("SELECT parameter,name FROM dynamicticket_escalation_campaigns WHERE id = ?", [$value])[0];
             $parameter = json_decode($query->parameter);
             $filter = "SELECT * FROM dynamicticket_datas WHERE dynamicticket_categorie_id=" . $parameter->category_id; //basic default filter
             if (property_exists($parameter, 'filter')) {
                 $filter = $parameter->filter;
             }
             $name[] = $query->name;
-            $temp = DB::connection('mirror')->select("SELECT COUNT(*) AS count,SUM(CASE WHEN jsonb_exists(status, '12') THEN 1 ELSE 0 END) AS consumed FROM ($filter)A;")[0];
+            $temp = DB::connection(MIRROR)->select("SELECT COUNT(*) AS count,SUM(CASE WHEN jsonb_exists(status, '12') THEN 1 ELSE 0 END) AS consumed FROM ($filter)A;")[0];
             $count[] = $temp->count;
             $totalCount += $temp->count;
             $consumed[] = $temp->consumed;

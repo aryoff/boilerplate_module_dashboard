@@ -520,6 +520,17 @@
                                         return ret;
                                     }
                                 },
+                                {
+                                    "data": "aht",
+                                    "title": "AHT",
+                                    "render": function (data, type, row, meta) {
+                                        if (parseInt(row['total_call'])!=0) {
+                                            return Math.round(parseInt(row['handlingtime']) / parseInt(row['total_call']));
+                                        } else {
+                                            return 0;
+                                        }
+                                    }
+                                },
                             ],
                         });
 
