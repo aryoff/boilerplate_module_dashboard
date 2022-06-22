@@ -128,7 +128,7 @@ class DashboardT2Controller extends Controller
                 $filter = $parameter->filter;
             }
             $name[] = $query->name;
-            $temp = DB::connection(MIRROR)->select("SELECT COUNT(*) AS count,SUM(CASE WHEN jsonb_exists(status, '$value') AND (status->'$value'->>'datetime')::DATE-CURRENT_DATE THEN 1 ELSE 0 END) AS consumed FROM ($filter)A;")[0];
+            $temp = DB::connection(MIRROR)->select("SELECT COUNT(*) AS count,SUM(CASE WHEN jsonb_exists(status, '$value') AND (status->'$value'->>'datetime')::DATE=CURRENT_DATE THEN 1 ELSE 0 END) AS consumed FROM ($filter)A;")[0];
             $count[] = $temp->count;
             $totalCount += $temp->count;
             $consumed[] = $temp->consumed;
