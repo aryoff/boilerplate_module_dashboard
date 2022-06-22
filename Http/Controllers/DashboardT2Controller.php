@@ -77,7 +77,7 @@ class DashboardT2Controller extends Controller
                 $temp->stafftime = $total_online;
                 $temp->total_call = $value->total_call;
                 if ((int)$total_online > 0) {
-                    $temp->occupancy = round($value->handlingtime / $total_online, 2) * 100;
+                    $temp->occupancy = round(($value->handlingtime / $total_online) * 100, 0);
                 } else {
                     $temp->occupancy = 0;
                 }
