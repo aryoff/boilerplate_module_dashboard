@@ -67,7 +67,6 @@ class DashboardT2Controller extends Controller
                     $diff = (array) date_diff(new DateTime('now'), $payload->onlineDatetime);
                     $total_online += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
                 }
-
                 $temp = new \stdClass;
                 $temp->agent_name = $value->agent_name;
                 $temp->agent_status = $value->agent_status;
@@ -77,8 +76,8 @@ class DashboardT2Controller extends Controller
                 $temp->holdtime = $value->holdtime;
                 $temp->stafftime = $total_online;
                 $temp->total_call = $value->total_call;
-                if ((int)$value->stafftime > 0) {
-                    $temp->occupancy = round($value->handlingtime / $value->stafftime, 2) * 100;
+                if ((int)$total_online > 0) {
+                    $temp->occupancy = round($value->handlingtime / $total_online, 2) * 100;
                 } else {
                     $temp->occupancy = 0;
                 }
