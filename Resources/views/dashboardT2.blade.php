@@ -400,8 +400,6 @@
                         bottomOccupancyChart.data.datasets[0].data = jParse.bottom_value;
                         bottomOccupancyChart.data.labels = jParse.bottom_label;
                         bottomOccupancyChart.update();
-
-
                         if ($.fn.DataTable.isDataTable('#topAgentStatusTable')) {
                             topAgentStatusTable.destroy();
                             $('#topAgentStatusTable').empty();
@@ -445,8 +443,8 @@
                                     "title": "Nama Agent"
                                 },
                                 {
-                                    "data": "agent_status",
-                                    "title": "Status",
+                                    "data": "distribution_status",
+                                    "title": "Distribution Status",
                                     "render": function (data, type, row, meta) {
                                         switch (data) {
                                             case 'online':
@@ -487,6 +485,10 @@
                                                 break;
                                         }
                                     }
+                                },
+                                {
+                                    "data": "pbx_status",
+                                    "title": "PBX Status"
                                 },
                                 {
                                     "data": "connected_number",

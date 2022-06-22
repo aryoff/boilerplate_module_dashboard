@@ -75,6 +75,11 @@ class DashboardT2Controller extends Controller
                 $diff = (array) date_diff(new DateTime('now'), $payload->onlineDatetime);
                 $total_online += $diff['s'] + ($diff['i'] * 60) + ($diff['h'] * 3600);
             }
+            if (substr($temp->distribution_status, 0, 3) == 'aux') {
+                $temp->dist_status_duration = $total_aux;
+            } else {
+                $temp->dist_status_duration = $total_online;
+            }
             $temp->total_online = $total_online;
             $temp->agent_name = $value->agent_name;
             $temp->pbx_status = $value->agent_status;
