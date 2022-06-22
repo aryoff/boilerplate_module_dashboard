@@ -487,6 +487,35 @@
                                     }
                                 },
                                 {
+                                    "data": "dist_status_duration",
+                                    "title": "Durasi",
+                                    "render": function (data, type, row, meta) {
+                                        let num;
+                                        let ret;
+                                        if (data == 0) {
+                                            ret = '00:00:00';
+                                        } else {
+                                            num = data;
+                                            let sec = num % 60;
+                                            if (sec<10) {
+                                                ret = '0'+sec;
+                                            } else {
+                                                ret = sec;
+                                            }
+                                            num = (num-sec) / 60;
+                                            let min = num % 60;
+                                            if (min<10) {
+                                                ret = '0'+min+':'+ret;
+                                            } else {
+                                                ret = min+':'+ret;
+                                            }
+                                            let hour = (num-min) / 60;
+                                            ret = hour+':'+ret;
+                                        }
+                                        return ret;
+                                    }
+                                },
+                                {
                                     "data": "pbx_status",
                                     "title": "PBX Status"
                                 },
