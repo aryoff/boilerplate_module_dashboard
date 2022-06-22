@@ -170,7 +170,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    // label: '# of Votes',
+                    label: 'Waitlist Campaign',
                     data: [],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -216,7 +216,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    // label: '# of Votes',
+                    label: 'Top Agent',
                     data: [],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -262,7 +262,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    // label: '# of Votes',
+                    label: 'Bottom Agent',
                     data: [],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
