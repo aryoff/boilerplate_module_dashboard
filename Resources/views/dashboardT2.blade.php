@@ -393,6 +393,7 @@
                 success: function (data) {
                     if (data) {
                         let jParse = JSON.parse(data);
+                        console.log(jParse);
                         topOccupancyChart.data.datasets[0].data = jParse.top_value;
                         topOccupancyChart.data.labels = jParse.top_label;
                         topOccupancyChart.update();
